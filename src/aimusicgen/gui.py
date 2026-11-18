@@ -104,6 +104,8 @@ class App(tk.Tk):
         ttk.Label(sf, text="SoundFont (.sf2)").grid(row=4, column=0, columnspan=2, sticky="w")
         ttk.Entry(sf, textvariable=self.v_sf, width=34).grid(row=4, column=2, columnspan=3, sticky="we")
         ttk.Button(sf, text="Browse", command=self._pick_sf).grid(row=4, column=5, sticky="w")
+        ttk.Button(sf, text="Download SoundFont (live instruments)", command=self._download_sf).grid(
+            row=6, column=0, columnspan=6, sticky="w", pady=4)
         ttk.Label(sf, text="auto = first file in the soundfonts folder, none = built-in sounds", foreground="#666").grid(
             row=5, column=0, columnspan=6, sticky="w")
         r += 1
@@ -173,6 +175,19 @@ class App(tk.Tk):
             duck_db=float(self.v_duck.get()), grid_shift_ms=float(self.v_shift.get()),
             soundfont=self.v_sf.get().strip() or "none",
         )
+
+    def _download_sf(self) -> None:
+        import threading
+
+        def work():
+            try:
+                from .sfdownload import download_soundfont
+                p = download_soundfont()
+                self.after(0, lambda: (self.v_sf.set("auto"), messagebox.showinfo("SoundFont", f"Ready:\n{p}")))
+            except Exception as e:
+                msg = str(e)
+                self.after(0, lambda: messagebox.showerror("SoundFont", msg))
+        threading.Thread(target=work, daemon=True).start()
 
     def _pick_sf(self) -> None:
         f = filedialog.askopenfilename(filetypes=[("SoundFont", "*.sf2")])

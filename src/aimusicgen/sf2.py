@@ -205,6 +205,11 @@ def find_soundfonts(extra_dirs: list[Path] | None = None) -> list[Path]:
     dirs = list(extra_dirs or [])
     if getattr(sys, "frozen", False):
         dirs.append(Path(sys.executable).parent / "soundfonts")
+    try:
+        from .sfdownload import user_dir
+        dirs.append(user_dir())
+    except Exception:
+        pass
     dirs.append(Path.cwd() / "soundfonts")
     dirs.append(Path(__file__).resolve().parents[2] / "soundfonts")
     found: list[Path] = []

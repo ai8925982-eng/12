@@ -325,3 +325,12 @@ python -m aimusicgen.tools_cli separate song.wav --out stems [--six]     # แ�
 - `src/aimusicgen/project.py`: บันทึก/เปิดโปรเจกต์ `.aimproj`
 - `separate` ต้อง `pip install demucs` (ดึง PyTorch) และดาวน์โหลดโมเดลครั้งแรก ได้ vocals/drums/bass/other (หรือเพิ่ม guitar/piano กับ `--six`) ไม่ใช่ 18 ชนิด และยังไม่ได้ทดสอบจริงในเครื่องที่เขียน
 - ยังไม่มี: Text-to-Music, Vocal Generation, Cover/Remix ด้วยโมเดล AI, ตัวติดตั้ง Windows, GUI มัลติแทร็ก/Piano Roll
+
+## เสียงดนตรีสด (เครื่องดนตรีจริงจากตัวอย่างเสียง)
+
+เสียงสังเคราะห์ในตัวไม่มีวันเหมือนเครื่องจริง วิธีที่ได้เสียงสดคือใช้ตัวอย่างเสียงที่บันทึกจากเครื่องดนตรีจริง (SoundFont)
+1. เปิดโปรแกรม กดปุ่ม **Download SoundFont (live instruments)** (โหลด GeneralUser GS ~30 MB ครั้งเดียว เก็บที่ `%LOCALAPPDATA%\AIMusicGenerator\soundfonts`)
+2. ปล่อยช่อง SoundFont เป็น `auto` แล้วสร้างเพลงตามปกติ (ตอนนี้ค่าเริ่มต้นเป็น `auto`)
+3. ถ้าปุ่มโหลดไม่ได้ ให้โหลดไฟล์ `.sf2` เองจาก https://github.com/mrbumpy409/GeneralUser-GS แล้ววางในโฟลเดอร์ `soundfonts` ข้างโปรแกรม
+
+เครื่องที่ฟอนต์ไม่มีตัวอย่างจริง (เช่น พิณ แคน โหวด โปงลาง ซึ่งไม่อยู่ใน GM) จะถูกแทนด้วยเครื่องใกล้เคียง (banjo, accordion, pan flute, xylophone) ฟอนต์ GM จึงไม่ใช่พิณ/แคนจริง ถ้ามี `.sf2` ของพิณ/แคนโดยเฉพาะ ให้ใช้ไฟล์นั้นแทน

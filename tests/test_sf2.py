@@ -72,3 +72,13 @@ def test_pipeline_uses_soundfont(tmp_path):
                         soundfont=str(p))
     r = generate(o, lambda *a: None)
     assert r.audio_path and Path(r.audio_path).exists()
+
+
+def test_download_via_file_url(tmp_path):
+    from aimusicgen.sfdownload import download_soundfont
+    src = build_sf2(tmp_path / "src.sf2")
+    # pad so it passes the 'already downloaded' size check path only when cached
+    out = download_soundfont(tmp_path / "dl", [Path(src).as_uri()])
+    assert out.exists() and SoundFont(out).has(0)
+    with pytest.raises(RuntimeError):
+        download_soundfont(tmp_path / "dl2", [(tmp_path / "nope.sf2").as_uri()])

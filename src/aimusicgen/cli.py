@@ -34,7 +34,7 @@ def build_parser() -> argparse.ArgumentParser:
     p.add_argument("--bits", type=int, choices=[16, 24], default=16, help="WAV bit depth")
     p.add_argument("--duck", type=float, default=4.0, help="dB the accompaniment ducks under the vocal (0 = off)")
     p.add_argument("--vocal-gain", type=float, default=0.0, help="vocal gain in dB (0 = untouched)")
-    p.add_argument("--soundfont", default="none", help="'none', 'auto' (first .sf2 in ./soundfonts) or a path to a .sf2 file")
+    p.add_argument("--soundfont", default="auto", help="'none', 'auto' (first .sf2 in ./soundfonts) or a path to a .sf2 file")
     p.add_argument("--shift-ms", type=float, default=0.0, help="nudge the music against the vocal in ms (+ = later)")
     p.add_argument("--list-genres", action="store_true", help="print supported genres and exit")
     return p

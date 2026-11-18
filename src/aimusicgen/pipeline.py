@@ -42,7 +42,7 @@ class GenerateOptions:
     vocal_gain_db: float = 0.0
     grid_shift_ms: float = 0.0  # manual nudge of the music against the vocal (+ = later)
     follow_vocal: bool = True  # take BPM/key from the vocal when not set manually
-    soundfont: str = "none"  # "none" = built-in synthesis, "auto" = first .sf2 found in ./soundfonts, or a path to .sf2
+    soundfont: str = "auto"  # "none" = built-in synthesis, "auto" = first .sf2 found in ./soundfonts, or a path to .sf2
 
 
 @dataclass
