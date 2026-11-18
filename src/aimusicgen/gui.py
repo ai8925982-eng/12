@@ -49,6 +49,7 @@ class App(tk.Tk):
         self.v_duck = tk.DoubleVar(value=4.0)
         self.v_shift = tk.DoubleVar(value=0.0)
         self.v_sf = tk.StringVar(value="auto")
+        self.v_ref = tk.StringVar(value="")
         self._load_settings()
         self.protocol("WM_DELETE_WINDOW", self._on_close)
 
@@ -104,6 +105,9 @@ class App(tk.Tk):
         ttk.Label(sf, text="SoundFont (.sf2)").grid(row=4, column=0, columnspan=2, sticky="w")
         ttk.Entry(sf, textvariable=self.v_sf, width=34).grid(row=4, column=2, columnspan=3, sticky="we")
         ttk.Button(sf, text="Browse", command=self._pick_sf).grid(row=4, column=5, sticky="w")
+        ttk.Label(sf, text="Reference sound").grid(row=7, column=0, columnspan=2, sticky="w")
+        ttk.Entry(sf, textvariable=self.v_ref, width=34).grid(row=7, column=2, columnspan=3, sticky="we")
+        ttk.Button(sf, text="Browse", command=self._pick_ref).grid(row=7, column=5, sticky="w")
         ttk.Button(sf, text="Download SoundFont (live instruments)", command=self._download_sf).grid(
             row=6, column=0, columnspan=6, sticky="w", pady=4)
         ttk.Label(sf, text="auto = first file in the soundfonts folder, none = built-in sounds", foreground="#666").grid(
@@ -174,6 +178,7 @@ class App(tk.Tk):
             lead=(self.v_lead.get() if vocal is None else False), export_stems=self.v_stems.get(),
             duck_db=float(self.v_duck.get()), grid_shift_ms=float(self.v_shift.get()),
             soundfont=self.v_sf.get().strip() or "none",
+            reference=self.v_ref.get().strip(),
         )
 
     def _download_sf(self) -> None:
@@ -188,6 +193,11 @@ class App(tk.Tk):
                 msg = str(e)
                 self.after(0, lambda: messagebox.showerror("SoundFont", msg))
         threading.Thread(target=work, daemon=True).start()
+
+    def _pick_ref(self) -> None:
+        f = filedialog.askopenfilename(filetypes=[("Audio", "*.wav *.flac *.mp3 *.ogg")])
+        if f:
+            self.v_ref.set(f)
 
     def _pick_sf(self) -> None:
         f = filedialog.askopenfilename(filetypes=[("SoundFont", "*.sf2")])

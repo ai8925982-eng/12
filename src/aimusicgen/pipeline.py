@@ -42,6 +42,7 @@ class GenerateOptions:
     vocal_gain_db: float = 0.0
     grid_shift_ms: float = 0.0  # manual nudge of the music against the vocal (+ = later)
     follow_vocal: bool = True  # take BPM/key from the vocal when not set manually
+    reference: str = ""  # optional audio file whose tempo and tonal balance the music should resemble
     soundfont: str = "auto"  # "none" = built-in synthesis, "auto" = first .sf2 found in ./soundfonts, or a path to .sf2
 
 
@@ -75,6 +76,15 @@ def generate(opts: GenerateOptions, progress: Progress = _noop) -> GenerateResul
     bpm, key_pc, scale, bars = opts.bpm, None, opts.scale, opts.bars
     if opts.key:
         key_pc = note_name_to_pc(opts.key)
+
+    ref_profile = None
+    if opts.reference:
+        from .reference import analyze_reference
+        progress(0.02, "Analysing reference track...")
+        ref_profile = analyze_reference(opts.reference)
+        progress(0.03, f"Reference: ~{ref_profile.bpm:g} BPM, {ref_profile.seconds:.0f} s")
+        if bpm is None and not opts.vocal_path:
+            bpm = ref_profile.bpm      # with a vocal, the vocal's own tempo wins
 
     if opts.vocal_path:
         progress(0.02, "Analysing vocal (tempo / key / phrasing)...")
@@ -137,6 +147,9 @@ def generate(opts: GenerateOptions, progress: Progress = _noop) -> GenerateResul
                 progress(0.36, "No .sf2 found in ./soundfonts; using built-in sounds")
         stems = render_stereo(song, genre, SR, sf=sf)
         accomp = master_bus(stems, genre, SR)
+        if ref_profile is not None:
+            from .reference import match_tonal_balance
+            accomp = match_tonal_balance(accomp, ref_profile, SR)
         accomp = peak_normalize(soft_limit(accomp * 0.8), -3.0)
         if opts.export_stems:
             for name, st in stems.items():
