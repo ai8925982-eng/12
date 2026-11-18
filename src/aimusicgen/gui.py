@@ -75,11 +75,6 @@ class App(tk.Tk):
         r += 1
         ttk.Label(frm, text="(vocal stays untouched; music is generated around it, in its tempo & key)",
                   foreground="#666").grid(row=r, column=1, sticky="w", padx=8)
-        ttk.Label(sf, text="SoundFont (.sf2)").grid(row=4, column=0, columnspan=2, sticky="w")
-        ttk.Entry(sf, textvariable=self.v_sf, width=34).grid(row=4, column=2, columnspan=3, sticky="we")
-        ttk.Button(sf, text="Browse", command=self._pick_sf).grid(row=4, column=5, sticky="w")
-        ttk.Label(sf, text="auto = first file in the soundfonts folder, none = built-in sounds", foreground="#666").grid(
-            row=5, column=0, columnspan=6, sticky="w")
         r += 1
 
         sf = ttk.LabelFrame(frm, text="Settings (leave blank / auto for automatic)", padding=8)
@@ -106,6 +101,11 @@ class App(tk.Tk):
         ttk.Label(sf, text="Shift music (ms)").grid(row=3, column=0, columnspan=2, sticky="w", pady=6)
         ttk.Spinbox(sf, from_=-1000, to=1000, increment=10, textvariable=self.v_shift, width=7).grid(row=3, column=2, sticky="w")
         ttk.Label(sf, text="(+ = music later; use if the beat feels off)", foreground="#666").grid(row=3, column=3, columnspan=3, sticky="w")
+        ttk.Label(sf, text="SoundFont (.sf2)").grid(row=4, column=0, columnspan=2, sticky="w")
+        ttk.Entry(sf, textvariable=self.v_sf, width=34).grid(row=4, column=2, columnspan=3, sticky="we")
+        ttk.Button(sf, text="Browse", command=self._pick_sf).grid(row=4, column=5, sticky="w")
+        ttk.Label(sf, text="auto = first file in the soundfonts folder, none = built-in sounds", foreground="#666").grid(
+            row=5, column=0, columnspan=6, sticky="w")
         r += 1
 
         ttk.Label(frm, text="Output folder").grid(row=r, column=0, sticky="w", **pad)
